@@ -7,14 +7,21 @@
 
 import UIKit
 
+extension UITextField {
+    func indent(size:CGFloat) {
+        self.leftView = UIView(frame: CGRect(x: self.frame.minX, y: self.frame.minY, width: size, height: self.frame.height))
+        self.leftViewMode = .always
+    }
+}
+
 class ProfileHeaderView: UIView {
     
-
+    private var statusText = String()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
     }
-
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -68,7 +75,27 @@ class ProfileHeaderView: UIView {
     }()
     
     @objc private func tapAction() {
-        userStatus.text = "Введите статус"
+        userStatus.text = statusText
+        newStatus.text = "Введите новый статус"
+        self.endEditing(true)
+        
+    }
+    lazy var newStatus: UITextField = {
+        let newStatus = UITextField()
+        newStatus.translatesAutoresizingMaskIntoConstraints = false
+        newStatus.indent(size: 10)
+        newStatus.text = "Enter the new status here..."
+        newStatus.textColor = .black
+        newStatus.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        newStatus.backgroundColor = .white
+        newStatus.layer.borderWidth = 1.0
+        newStatus.layer.borderColor = UIColor.black.cgColor
+        newStatus.layer.cornerRadius = 12.0
+        newStatus.addTarget(self, action: #selector(statusTextChanges), for: .editingChanged)
+        return newStatus
+    }()
+    @objc private func statusTextChanges() {
+        statusText = newStatus.text!
     }
     
     private func setupLayout(){
@@ -84,9 +111,16 @@ class ProfileHeaderView: UIView {
             userStatus.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -16.0),
             userStatus.bottomAnchor.constraint(equalTo: showStatus.topAnchor, constant: -64.0),
             showStatus.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 16.0),
-            showStatus.topAnchor.constraint(equalTo: userImage.bottomAnchor, constant: 45.0),
+            showStatus.topAnchor.constraint(equalTo: userImage.bottomAnchor, constant: 16.0),
             showStatus.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -16.0),
-            showStatus.heightAnchor.constraint(equalToConstant: 50.0)
+            showStatus.heightAnchor.constraint(equalToConstant: 50.0),
+            newStatus.leadingAnchor.constraint(equalTo: userImage.trailingAnchor, constant: 16.0),
+            newStatus.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -16.0),
+            newStatus.topAnchor.constraint(equalTo: userStatus.bottomAnchor, constant: 8.0),
+            newStatus.heightAnchor.constraint(equalToConstant: 40),
+            showStatus.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 16.0),
+            showStatus.topAnchor.constraint(equalTo: userImage.bottomAnchor, constant: 46.0),
+            showStatus.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -16.0)
         ])
     }
     
@@ -95,6 +129,7 @@ class ProfileHeaderView: UIView {
         addSubview(userName)
         addSubview(userStatus)
         addSubview(showStatus)
+        addSubview(newStatus)
         setupLayout()
     }
 }
