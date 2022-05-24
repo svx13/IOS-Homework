@@ -15,7 +15,7 @@ extension LogInViewController: UITextFieldDelegate {
 import UIKit
 
 class LogInViewController: UIViewController {
-
+    
     private let notify = NotificationCenter.default
     
     private let scrollView: UIScrollView = {
@@ -105,7 +105,7 @@ class LogInViewController: UIViewController {
     }(UITextField())
     
     @objc private func userPassword() {
-
+        
     }
     
     private lazy var logInButton: UIButton = {

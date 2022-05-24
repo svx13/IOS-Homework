@@ -8,7 +8,7 @@
 import UIKit
 
 class PostTableViewCell: UITableViewCell {
-
+    
     private let postView: UIView = {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.backgroundColor = .white
@@ -88,35 +88,20 @@ class PostTableViewCell: UITableViewCell {
             postView.topAnchor.constraint(equalTo: contentView.topAnchor),
             postView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             postView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            postView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
-        ])
-        
-        NSLayoutConstraint.activate([
+            postView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             authorLabel.topAnchor.constraint(equalTo: postView.topAnchor, constant: inset),
             authorLabel.leadingAnchor.constraint(equalTo: postView.leadingAnchor, constant: inset),
             authorLabel.trailingAnchor.constraint(equalTo: postView.trailingAnchor, constant: -inset),
-        ])
-        
-        NSLayoutConstraint.activate([
             postImageView.topAnchor.constraint(equalTo: authorLabel.bottomAnchor, constant: 12),
             postImageView.leadingAnchor.constraint(equalTo: postView.leadingAnchor),
             postImageView.heightAnchor.constraint(equalTo: postImageView.widthAnchor),
             postImageView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width),
-        ])
-        
-        NSLayoutConstraint.activate([
             descriptionLabel.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: inset),
             descriptionLabel.leadingAnchor.constraint(equalTo: postView.leadingAnchor, constant: inset),
-            descriptionLabel.trailingAnchor.constraint(equalTo: postView.trailingAnchor, constant: -inset)
-        ])
-        
-        NSLayoutConstraint.activate([
+            descriptionLabel.trailingAnchor.constraint(equalTo: postView.trailingAnchor, constant: -inset),
             likesLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: inset),
             likesLabel.leadingAnchor.constraint(equalTo: postView.leadingAnchor, constant: inset),
-            likesLabel.bottomAnchor.constraint(equalTo: postView.bottomAnchor, constant: -inset)
-        ])
-        
-        NSLayoutConstraint.activate([
+            likesLabel.bottomAnchor.constraint(equalTo: postView.bottomAnchor, constant: -inset),
             viewsLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: inset),
             viewsLabel.trailingAnchor.constraint(equalTo: postView.trailingAnchor, constant: -inset),
             viewsLabel.bottomAnchor.constraint(equalTo: postView.bottomAnchor, constant: -inset),

@@ -38,7 +38,7 @@ class ProfileHeaderView: UIView {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.image = UIImage(named: "Bird")
         $0.clipsToBounds = true
-        $0.layer.cornerRadius = 75
+        $0.layer.cornerRadius = 65
         $0.layer.borderWidth = 3.0
         $0.backgroundColor = .systemGray5
         $0.contentMode = .scaleAspectFill
@@ -105,25 +105,26 @@ class ProfileHeaderView: UIView {
         NSLayoutConstraint.activate([
             avatarImageView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 16.0),
             avatarImageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 16.0),
-            avatarImageView.heightAnchor.constraint(equalToConstant: 150.0),
-            avatarImageView.widthAnchor.constraint(equalToConstant: 150.0),
+            avatarImageView.heightAnchor.constraint(equalToConstant: 130.0),
+            avatarImageView.widthAnchor.constraint(equalToConstant: 130.0),
+            
             fullNameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16.0),
             fullNameLabel.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -16.0),
             fullNameLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 27.0),
+            
             statusLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16.0),
             statusLabel.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -16.0),
             statusLabel.bottomAnchor.constraint(equalTo: setStatusButton.topAnchor, constant: -64.0),
+            
             setStatusButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 16.0),
             setStatusButton.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 16.0),
             setStatusButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -16.0),
             setStatusButton.heightAnchor.constraint(equalToConstant: 50.0),
+            
             statusTextField.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16.0),
             statusTextField.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -16.0),
-            statusTextField.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 8.0),
-            statusTextField.heightAnchor.constraint(equalToConstant: 40),
-            setStatusButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 16.0),
-            setStatusButton.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 46.0),
-            setStatusButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -16.0)
+            statusTextField.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 1.0),
+            statusTextField.heightAnchor.constraint(equalToConstant: 40)
         ])
     }
     
