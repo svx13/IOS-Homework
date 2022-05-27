@@ -64,23 +64,39 @@
 		5A7AB784282D1A210010798C /* Profile */ = {
 			isa = PBXGroup;
 			children = (
-				5A53BADD283A576D001A5560 /* Post.swift */,
-				5A9EC6DD283D1F4300E35B45 /* Photo.swift */,
-				5A53BAE1283B55BB001A5560 /* PostTableViewCell.swift */,
-				5A9EC6D9283D1E6D00E35B45 /* PhotosCollectionViewCell.swift */,
 				5A7AB785282D1A780010798C /* ProfileHeaderView.swift */,
 				5ADA042828243A7A00938B1B /* ProfileViewController.swift */,
-				5A9EC6DF283D25E600E35B45 /* PhotosViewController.swift */,
-				5A9EC6D7283D1A6500E35B45 /* PhotosTableViewCell.swift */,
 				5A0542CD283A2B530087916D /* LogInViewController.swift */,
 				5A53BADF283A605E001A5560 /* UIViewAndExtension.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
 		};
+		5A9EC6E1283FEB9000E35B45 /* Post */ = {
+			isa = PBXGroup;
+			children = (
+				5A53BADD283A576D001A5560 /* Post.swift */,
+				5A53BAE1283B55BB001A5560 /* PostTableViewCell.swift */,
+			);
+			path = Post;
+			sourceTree = "<group>";
+		};
+		5A9EC6E2283FEBA900E35B45 /* Photos */ = {
+			isa = PBXGroup;
+			children = (
+				5A9EC6D9283D1E6D00E35B45 /* PhotosCollectionViewCell.swift */,
+				5A9EC6DD283D1F4300E35B45 /* Photo.swift */,
+				5A9EC6DF283D25E600E35B45 /* PhotosViewController.swift */,
+				5A9EC6D7283D1A6500E35B45 /* PhotosTableViewCell.swift */,
+			);
+			path = Photos;
+			sourceTree = "<group>";
+		};
 		5ADA03FE282438C400938B1B = {
 			isa = PBXGroup;
 			children = (
+				5A9EC6E2283FEBA900E35B45 /* Photos */,
+				5A9EC6E1283FEB9000E35B45 /* Post */,
 				5A7AB784282D1A210010798C /* Profile */,
 				5ADA0409282438C400938B1B /* Navigation */,
 				5ADA0408282438C400938B1B /* Products */,

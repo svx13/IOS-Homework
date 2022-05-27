@@ -71,6 +71,7 @@ class PhotosViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.tintColor = UIColor(ciColor: .init(color: colorSet))
         self.view.backgroundColor = .systemGray6
         self.title = "Photo Gallery"
         self.navigationItem.backButtonTitle = "Back"

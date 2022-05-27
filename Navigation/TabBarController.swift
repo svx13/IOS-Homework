@@ -18,12 +18,13 @@ extension UIColor {
 }
 
 import UIKit
+let colorSet = UIColor(hex:0x4885CC)
 
 class TabBarController: UITabBarController {
     
     let feedViewController = FeedViewController()
     let logInViewController = LogInViewController()
-    let colorSet = UIColor(hex:0x4885CC)
+   
     
     override func viewDidLoad() {
         super.viewDidLoad()
