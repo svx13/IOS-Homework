@@ -67,7 +67,6 @@ class PostTableViewCell: UITableViewCell {
         return label
     }()
     
-    // переообределяю инициализатор
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         layout()
@@ -78,7 +77,6 @@ class PostTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // прописываю Gestures
     private func setupGestures() {
         
         let tapLikeGesture = UITapGestureRecognizer(target: self, action: #selector(likeAction))
@@ -103,7 +101,7 @@ class PostTableViewCell: UITableViewCell {
     
     @objc private func postImageViewAction() {
         
-        // delegate?.buttonTap
+   
         UIView.animate(withDuration: 0.5,
                        delay: 0.0,
                        usingSpringWithDamping: 1.0,
@@ -117,7 +115,6 @@ class PostTableViewCell: UITableViewCell {
         }
     }
     
-    // подписываю PostModel под элементы таблицы
     func setupCell(_ post: PostModel) {
         modelPostFull = post
         authourLabel.text = post.author
@@ -132,35 +129,25 @@ class PostTableViewCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
             
-            // Констрейнт для ячейки
+
             mainView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor),
             mainView.leadingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.leadingAnchor),
             mainView.bottomAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.bottomAnchor),
             mainView.trailingAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.trailingAnchor),
-            
-            // Констрейнт для authourLabel
             authourLabel.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 16),
             authourLabel.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: 16),
             authourLabel.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -16),
-            
-            // Констрейнт для postView
             postImageView.topAnchor.constraint(equalTo: authourLabel.bottomAnchor, constant: 16),
             postImageView.leadingAnchor.constraint(equalTo: mainView.leadingAnchor),
             postImageView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor),
             postImageView.heightAnchor.constraint(equalTo: postImageView.widthAnchor),
-            
-            // Констрейнт для descriptionLable
             descriptionLable.topAnchor.constraint(equalTo: postImageView.bottomAnchor, constant: 16),
             descriptionLable.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: 16),
             descriptionLable.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -16),
-            
-            // Констрейнт для likesLable
             likesLable.topAnchor.constraint(equalTo: descriptionLable.bottomAnchor, constant: 16),
             likesLable.leadingAnchor.constraint(equalTo: mainView.leadingAnchor, constant: 16),
             likesLable.trailingAnchor.constraint(equalTo: mainView.centerXAnchor),
             likesLable.bottomAnchor.constraint(equalTo: mainView.bottomAnchor, constant: -16),
-            
-            // Констрейнт для viewLabel
             viewLabel.topAnchor.constraint(equalTo: descriptionLable.bottomAnchor, constant: 16),
             viewLabel.leadingAnchor.constraint(equalTo: mainView.centerXAnchor),
             viewLabel.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -16),

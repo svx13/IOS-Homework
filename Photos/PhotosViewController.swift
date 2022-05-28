@@ -23,25 +23,24 @@ class PhotosViewController: UIViewController {
     }()
     
     private lazy var buttonCancel: UIButton = {
-        let button = UIButton()
-        button.layer.opacity = 0
-        button.setImage(UIImage(systemName: "multiply.circle"), for: .normal)
-        button.addTarget(self, action: #selector(cancelAnimationButton), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.isUserInteractionEnabled = true
-        return button
-    }()
+        $0.layer.opacity = 0
+        $0.setImage(UIImage(systemName: "multiply.circle"), for: .normal)
+        $0.addTarget(self, action: #selector(cancelAnimationButton), for: .touchUpInside)
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.isUserInteractionEnabled = true
+        return $0
+    }(UIButton())
     
     private let blackView: UIView = {
-        let view = UIView()
-        view.frame = UIScreen.main.bounds
-        view.backgroundColor = .black
-        view.alpha = 0.8
-        view.isUserInteractionEnabled = true
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.opacity = 0
-        return view
-    }()
+        //let view = UIView()
+        $0.frame = UIScreen.main.bounds
+        $0.backgroundColor = .black
+        $0.alpha = 0.8
+        $0.isUserInteractionEnabled = true
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.layer.opacity = 0
+        return $0
+    }(UIView())
     
     var fullScreenImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "photo1"))

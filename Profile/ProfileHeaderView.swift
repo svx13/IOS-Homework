@@ -35,7 +35,6 @@ class ProfileHeaderView: UIView {
     } (UIImageView())
     
     private lazy var additionalAvatar: UIImageView = {
-       // $0.imageView = UIImageView()
         $0.translatesAutoresizingMaskIntoConstraints = false
         return $0
     }(UIImageView())
@@ -43,22 +42,19 @@ class ProfileHeaderView: UIView {
     
  
     private lazy var setStatusButton: UIButton = {
-        //let button = UIButton()
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = .systemBlue
+        $0.backgroundColor = UIColor(hexString: "#4C75A3")
         $0.setTitle("Set status", for: .normal)
         $0.layer.cornerRadius = 4
         $0.titleLabel?.textColor = UIColor.systemRed
         $0.layer.shadowOffset = CGSize(width: 4, height: 4)
         $0.layer.shadowOpacity = 0.7
         $0.layer.shadowColor = UIColor.black.cgColor
-        //действия кнопки
         $0.addTarget(self, action: #selector(buttonStatus), for: .touchUpInside)
         return $0
     }(UIButton())
     
     private lazy var cancelAnimationButton: UIButton = {
-       // let button = UIButton()
         $0.layer.opacity = 0
         $0.setImage(UIImage(systemName: "multiply.circle"), for: .normal)
         $0.addTarget(self, action: #selector(pressCancelAnimationButton), for: .touchUpInside)
@@ -68,7 +64,6 @@ class ProfileHeaderView: UIView {
     }(UIButton())
     
     private lazy var blackView: UIView = {
-        //let view = UIView()
         $0.frame = UIScreen.main.bounds
         $0.backgroundColor = .black
         $0.alpha = 0.8
@@ -80,7 +75,6 @@ class ProfileHeaderView: UIView {
     }(UIView())
     
     private lazy var fullNameLable: UILabel = {
-        //let label = UILabel()
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.text = "Попугай Жора"
         $0.font = UIFont.systemFont(ofSize: 18, weight: .bold)
@@ -89,7 +83,6 @@ class ProfileHeaderView: UIView {
     }(UILabel())
     
     private lazy var statusView: UITextView = {
-        //let textView = UITextView ()
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.text = "Старый статус"
         $0.backgroundColor = .clear
@@ -100,7 +93,6 @@ class ProfileHeaderView: UIView {
     
 
     private var statusTextField: UITextField = {
-       // let fieldText = UITextField()
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.placeholder = "Введите новый статус"
         $0.backgroundColor = .white
@@ -190,31 +182,24 @@ class ProfileHeaderView: UIView {
             avatarImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             avatarImageView.widthAnchor.constraint(equalToConstant: 100),
             avatarImageView.heightAnchor.constraint(equalToConstant: 100),
-            
             additionalAvatar.topAnchor.constraint(equalTo: self.topAnchor, constant: 16),
             additionalAvatar.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             additionalAvatar.heightAnchor.constraint(equalToConstant: 100),
             additionalAvatar.widthAnchor.constraint(equalTo: additionalAvatar.heightAnchor, multiplier: 1),
-            
             cancelAnimationButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 16),
             cancelAnimationButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
             cancelAnimationButton.widthAnchor.constraint(equalToConstant: 40),
             cancelAnimationButton.heightAnchor.constraint(equalTo: cancelAnimationButton.widthAnchor, multiplier: 1),
-            
             fullNameLable.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 27),
             fullNameLable.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16),
-            
             statusView.bottomAnchor.constraint(equalTo: statusTextField.topAnchor, constant: -6),
             statusView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16),
             statusView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
             statusView.heightAnchor.constraint(equalToConstant: 30),
-            
             setStatusButton.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 16),
             setStatusButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16 ),
             setStatusButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
             setStatusButton.heightAnchor.constraint(equalToConstant: 50),
-            
-
             statusTextField.bottomAnchor.constraint(equalTo: setStatusButton.topAnchor, constant: -16),
             statusTextField.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16),
             statusTextField.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),

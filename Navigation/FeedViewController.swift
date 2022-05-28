@@ -8,9 +8,7 @@
 import UIKit
 
 class FeedViewController: UIViewController {
-    
-   // private let postOne = Post(title: "Привет")
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .green

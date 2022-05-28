@@ -23,7 +23,7 @@ class InfoViewController: UIViewController {
         view.addSubview(button)
     }
     @objc private func tapAction(){
-        let alert = UIAlertController(title: "Свернуть окно", message: "Хотите свернуть окно?", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Выход", message: "Хотите выйти?", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Да", style: .default) { _ in
             self.dismiss(animated: true)
         }
