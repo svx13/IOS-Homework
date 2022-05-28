@@ -7,90 +7,142 @@
 
 import UIKit
 
-extension ProfileViewController: UITableViewDataSource {
+class ProfileViewController: UIViewController {
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+    private lazy var postModel = PostModel.makePostModel()
+    private lazy var imageModel = ImageModel.addImage()
+    
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .grouped)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.separatorInset = .zero
+        tableView.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.identifier)
+        tableView.register(PhotosTableViewCell.self, forCellReuseIdentifier: PhotosTableViewCell.identifier)
+        return tableView
+    }()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        layout ()
+        
+        self.view.backgroundColor = .systemGray6
+        hideKeyboardTapperAround()
+        
+        
+        
+        navigationItem.title = "Назад"
+        navigationController?.navigationBar.isHidden = false
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == 0 ? 1 : postModel.count
+
+    private func layout () {
+        view.addSubview(tableView)
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+        ])
+    }
+}
+
+extension ProfileViewController: UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int ) -> Int {
+        return postModel.count + 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: PhotosTableViewCell.identifier, for: indexPath) as! PhotosTableViewCell
-            cell.selectionStyle = .none
+        if indexPath.item != 0 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: PostTableViewCell.identifier, for: indexPath) as! PostTableViewCell
+        
+            cell.tapPostImageDelegate = self
+            cell.setupCell(postModel[indexPath.row - 1])
             return cell
         } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: PostTableViewCell.identifier, for: indexPath) as! PostTableViewCell
-            cell.setupCell(postModel[indexPath.row])
+            let cell = tableView.dequeueReusableCell(withIdentifier: PhotosTableViewCell.identifier, for: indexPath) as! PhotosTableViewCell
+            cell.setupLabel("")
+         
+            cell.delegate = self
             cell.selectionStyle = .none
             return cell
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 0 {
-            self.navigationController?.pushViewController(PhotosViewController(), animated: true)
-            self.navigationItem.backButtonTitle = "Back"
-        } else { return
         }
     }
 }
 
 extension ProfileViewController: UITableViewDelegate {
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        UITableView.automaticDimension
+        return UITableView.automaticDimension
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: ProfileHeaderView.identifier) as! ProfileHeaderView
-        return section == 0 ? header : nil
+        let profileHeaderView = ProfileHeaderView()
+        profileHeaderView.backgroundColor = .systemGray6
+        return section == 0 ? profileHeaderView: nil
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return section == 0 ? 220 : 0
+        return section == 0 ? 200:0
+    }
+    
+  
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView .deselectRow(at: indexPath, animated: true)
+
     }
 }
 
-
-
-class ProfileViewController: UIViewController {
-    
-    private let postModel: [PostModel] = PostModel.makeMockModel()
-    
-    static let tableView: UITableView = {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.register(PhotosTableViewCell.self, forCellReuseIdentifier: PhotosTableViewCell.identifier)
-        $0.register(PostTableViewCell.self, forCellReuseIdentifier: PostTableViewCell.identifier)
-        $0.register(ProfileHeaderView.self, forHeaderFooterViewReuseIdentifier: ProfileHeaderView.identifier)
-        return $0
-    }(UITableView(frame: .zero, style: .grouped))
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .systemGray6
-        setupLayout()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.isHidden = true
-        self.tabBarController?.tabBar.isHidden = false
-    }
-    
-    private func setupLayout() {
-        ProfileViewController.tableView.delegate = self
-        ProfileViewController.tableView.dataSource = self
-        self.view.addSubview(ProfileViewController.tableView)
+extension ProfileViewController: PhotosTableViewCellDelegate {
+    func buttonTap() {
         
-        NSLayoutConstraint.activate([
-            ProfileViewController.tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            ProfileViewController.tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            ProfileViewController.tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            ProfileViewController.tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-        ])
+        let photosViewController = PhotosViewController()
+        navigationController?.pushViewController(photosViewController, animated: true)
     }
 }
+
+
+extension ProfileViewController: TapPostImageDelegate {
+    func postImagePressed(author: String, description: String, image: UIImage) {
+        let newView = PostDetailViewController()
+        newView.authourLabel.text = author
+        newView.postImageView.image = image
+        newView.descriptionLable.text = description
+        navigationController?.pushViewController(newView, animated: true)
+    }
+}
+
+
+extension ProfileViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        view.endEditing(true)
+        return true
+    }
+}
+
+
+extension ProfileViewController: UITextViewDelegate {
+    
+    func hideKeyboardTapperAround() {
+        
+        let press: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
+        press.cancelsTouchesInView = false
+        view.addGestureRecognizer(press)
+    }
+    @objc func dismissKeyboard(){
+        view.endEditing(true)
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+

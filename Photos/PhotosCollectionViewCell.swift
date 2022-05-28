@@ -7,40 +7,61 @@
 
 import UIKit
 
+
 class PhotosCollectionViewCell: UICollectionViewCell {
     
-    private var photosImageView: UIImageView = {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = .black
-        $0.contentMode = .scaleAspectFill
-        $0.layer.cornerRadius = 0
-        $0.clipsToBounds = true
-        return $0
-    }(UIImageView())
+    weak var buttonAllPhotoCellDelegate: PhotoCellDelegate?
+    
+    private var galleryImages: UIImageView = {
+        let galleryImage = UIImageView()
+        galleryImage .translatesAutoresizingMaskIntoConstraints = false
+        galleryImage .contentMode = .scaleAspectFill
+        galleryImage .clipsToBounds = true
+        return galleryImage
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupLayout()
+        imageLayout()
+        setupGestures()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setupCell(_ photo: Photos) {
-        photosImageView.image = UIImage(named: photo.image)
-        
+    private func setupGestures() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(photoAction))
+        galleryImages.addGestureRecognizer(tapGesture)
+        galleryImages.isUserInteractionEnabled = true
     }
     
-    private func setupLayout() {
-        contentView.addSubview(photosImageView)
+    @objc private func photoAction() {
+        buttonAllPhotoCellDelegate?.tapAction(photo: galleryImages.image!)
+    }
+    
+    
+    func setupImageModel(_ image: ImageModel) {
+        galleryImages.image = UIImage(named: image.image)
+    }
+    
+    private func imageLayout() {
+        contentView.addSubview(galleryImages)
+        
         
         NSLayoutConstraint.activate([
-            photosImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            photosImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            photosImageView.widthAnchor.constraint(equalTo: contentView.widthAnchor),
-            photosImageView.heightAnchor.constraint(equalTo: contentView.heightAnchor)
+            galleryImages.topAnchor.constraint(equalTo: contentView.topAnchor),
+            galleryImages.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            galleryImages.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            galleryImages.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            
         ])
     }
+}
+
+
+protocol PhotoCellDelegate: AnyObject {
+    func  tapAction(photo: UIImage)
+    func  cancelAnimationButton()
 }
 

@@ -5,72 +5,82 @@
 //  Created by Саша on 12.05.2022.
 //
 
-
 import UIKit
 
-extension UITextField {
-    func indent(size:CGFloat) {
-        self.leftView = UIView(frame: CGRect(x: self.frame.minX, y: self.frame.minY, width: size, height: self.frame.height))
-        self.leftViewMode = .always
-    }
-}
-
-extension ProfileHeaderView: UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.endEditing(true)
-        return true
-    }
-}
-
-class ProfileHeaderView: UITableViewHeaderFooterView {
+class ProfileHeaderView: UIView {
     
-    override init(reuseIdentifier: String?) {
-        super.init(reuseIdentifier: reuseIdentifier)
+    private var statusText: String?
+   
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupLayuot()
         setupGestures()
-        setupLayout()
     }
     
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
+        fatalError("init(coder:) has not been implemented")
     }
     
-    private var statusText = String()
-    private lazy var avatarImagePosition = avatarImageView.layer.position
-    private lazy var avatarImageBounds = avatarImageView.layer.bounds
-    
-    private lazy var avatarView: UIView = {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = .black
-        $0.isUserInteractionEnabled = false
-        $0.alpha = 0.0
-        return $0
-    }(UIView())
-    
+
     private lazy var avatarImageView: UIImageView = {
-        $0.translatesAutoresizingMaskIntoConstraints = false
         $0.image = UIImage(named: "Bird")
-        $0.clipsToBounds = true
-        $0.layer.cornerRadius = 65
-        $0.layer.borderWidth = 3.0
-        $0.backgroundColor = .systemGray5
-        $0.contentMode = .scaleAspectFill
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.layer.cornerRadius = 50
+        $0.layer.borderWidth = 3
         $0.layer.borderColor = UIColor.white.cgColor
+        $0.clipsToBounds = true
+        $0.contentMode = .scaleAspectFill
         $0.isUserInteractionEnabled = true
+        return $0
+    } (UIImageView())
+    
+    private lazy var additionalAvatar: UIImageView = {
+       // $0.imageView = UIImageView()
+        $0.translatesAutoresizingMaskIntoConstraints = false
         return $0
     }(UIImageView())
     
-    private lazy var closeAvatarImageButton: UIButton = {
+    
+ 
+    private lazy var setStatusButton: UIButton = {
+        //let button = UIButton()
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.setImage(UIImage(systemName: "multiply.circle", withConfiguration: UIImage.SymbolConfiguration(pointSize: 40))?.withTintColor(colorSet, renderingMode: .alwaysOriginal), for: .normal)
-        $0.alpha = 0.0
-        $0.clipsToBounds = false
-        $0.addTarget(self, action: #selector(closeAvatarAction), for: .touchUpInside)
-        $0.isUserInteractionEnabled = false
+        $0.backgroundColor = .systemBlue
+        $0.setTitle("Set status", for: .normal)
+        $0.layer.cornerRadius = 4
+        $0.titleLabel?.textColor = UIColor.systemRed
+        $0.layer.shadowOffset = CGSize(width: 4, height: 4)
+        $0.layer.shadowOpacity = 0.7
+        $0.layer.shadowColor = UIColor.black.cgColor
+        //действия кнопки
+        $0.addTarget(self, action: #selector(buttonStatus), for: .touchUpInside)
         return $0
     }(UIButton())
     
+    private lazy var cancelAnimationButton: UIButton = {
+       // let button = UIButton()
+        $0.layer.opacity = 0
+        $0.setImage(UIImage(systemName: "multiply.circle"), for: .normal)
+        $0.addTarget(self, action: #selector(pressCancelAnimationButton), for: .touchUpInside)
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.isUserInteractionEnabled = true
+        return $0
+    }(UIButton())
     
-    private lazy var fullNameLabel: UILabel = {
+    private lazy var blackView: UIView = {
+        //let view = UIView()
+        $0.frame = UIScreen.main.bounds
+        $0.backgroundColor = .black
+        $0.alpha = 0.8
+        $0.isUserInteractionEnabled = true
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.layer.opacity = 0
+    
+        return $0
+    }(UIView())
+    
+    private lazy var fullNameLable: UILabel = {
+        //let label = UILabel()
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.text = "Попугай Жора"
         $0.font = UIFont.systemFont(ofSize: 18, weight: .bold)
@@ -78,150 +88,138 @@ class ProfileHeaderView: UITableViewHeaderFooterView {
         return $0
     }(UILabel())
     
-    private lazy var statusLabel: UILabel = {
+    private lazy var statusView: UITextView = {
+        //let textView = UITextView ()
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.text = "Старый статус"
-        $0.textColor = UIColor.gray
+        $0.backgroundColor = .clear
+        $0.textColor = .gray
         $0.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-        $0.isUserInteractionEnabled = false
         return $0
-    }(UILabel())
+    }(UITextView())
     
-    private lazy var setStatusButton: UIButton = {
+
+    private var statusTextField: UITextField = {
+       // let fieldText = UITextField()
         $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.backgroundColor = colorSet
-        $0.setTitle("Set status", for: .normal)
-        $0.setTitleColor(UIColor.white, for: .normal)
-        $0.layer.cornerRadius = 10
-        $0.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
-        return $0
-    }(UIButton())
-    
-    @objc private func buttonAction() {
-        statusLabel.text = statusText
-        statusTextField.text = ""
-        self.endEditing(true)
-    }
-    
-    private lazy var statusTextField: UITextField = {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-        $0.indent(size: 10)
-        $0.text = "Введите новый статус"
-        $0.textColor = .systemGray5
-        $0.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        $0.placeholder = "Введите новый статус"
         $0.backgroundColor = .white
-        $0.layer.borderWidth = 1.0
+        $0.layer.cornerRadius = 12
+        $0.layer.borderWidth = 1
         $0.layer.borderColor = UIColor.black.cgColor
-        $0.layer.cornerRadius = 12.0
-        $0.delegate = self
-        $0.addTarget(self, action: #selector(statusTextChanges), for: .editingChanged)
+        $0.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        $0.leftView = UIView(frame: CGRect(x: 0, y: 10, width: 10, height: $0.frame.height))
+        $0.leftViewMode = .always
+        $0.addTarget(self, action: #selector(statusTextChanged), for: .editingChanged)
         return $0
     }(UITextField())
     
-    @objc private func statusTextChanges() {
-        statusText = statusTextField.text!
-    
-    }
-    
-    private func setupGestures() {
-        let tapAvatarGesture = UITapGestureRecognizer(target: self, action: #selector(tapAvatarAction))
-        avatarImageView.addGestureRecognizer(tapAvatarGesture)
-    }
-    
-    @objc func tapAvatarAction() {
-        
-        self.avatarImagePosition = self.avatarImageView.layer.position
-        self.avatarImageBounds = self.avatarImageView.layer.bounds
-        
-        UIImageView.animate(withDuration: 0.5,
-                            animations: {
-            self.avatarImageView.center = CGPoint(x: UIScreen.main.bounds.midX, y: (UIScreen.main.bounds.midY - ProfileViewController.tableView.contentOffset.y))
-            self.avatarView.alpha = 0.8
-            self.avatarImageView.layer.bounds = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
-            self.avatarImageView.layer.cornerRadius = 0
-            self.avatarImageView.layer.borderWidth = 0
-            self.avatarImageView.isUserInteractionEnabled = false
-            self.setStatusButton.isUserInteractionEnabled = false
-            self.statusTextField.isUserInteractionEnabled = false
-            ProfileViewController.tableView.isScrollEnabled = false
-            ProfileViewController.tableView.cellForRow(at: IndexPath(item: 0, section: 0))?.isUserInteractionEnabled = false
-            ProfileViewController.tableView.cellForRow(at: IndexPath(item: 0, section: 1))?.isUserInteractionEnabled = false
-        },
-                            completion: { _ in
-            UIImageView.animate(withDuration: 0.3) {
-                self.closeAvatarImageButton.alpha = 1
-                self.closeAvatarImageButton.isUserInteractionEnabled = true
-                self.layoutIfNeeded()
-            }
-        })
-        
-    }
-    
-    @objc private func closeAvatarAction() {
-        UIView.animate(withDuration: 0.3,
-                       delay: 0.0,
-                       usingSpringWithDamping: 1.0,
-                       initialSpringVelocity: 0.0,
-                       options: .curveEaseInOut) {
-            self.closeAvatarImageButton.alpha = 0
-            self.closeAvatarImageButton.isUserInteractionEnabled = false
-        } completion: { _ in
-            UIView.animate(withDuration: 0.5,
-                           delay: 0.0) {
-                self.avatarView.alpha = 0.0
-                self.avatarImageView.layer.position = self.avatarImagePosition
-                self.avatarImageView.layer.bounds = self.avatarImageBounds
-                self.avatarImageView.layer.cornerRadius = self.avatarImageView.bounds.width / 2
-                self.avatarImageView.layer.borderWidth = 3
-                self.avatarImageView.isUserInteractionEnabled = true
-                self.setStatusButton.isUserInteractionEnabled = true
-                self.statusTextField.isUserInteractionEnabled = true
-                ProfileViewController.tableView.isScrollEnabled = true
-                ProfileViewController.tableView.cellForRow(at: IndexPath(item: 0, section: 0))?.isUserInteractionEnabled = true
-                ProfileViewController.tableView.cellForRow(at: IndexPath(item: 0, section: 1))?.isUserInteractionEnabled = true
-                self.layoutIfNeeded()
-            }
+    @objc private func buttonStatus() {
+        if statusTextField.text == "" {
+            statusTextField.attributedPlaceholder = NSAttributedString(
+                string: "Не может быть пустым",
+                attributes: [NSAttributedString.Key.foregroundColor:UIColor.red]
+            )
         }
+        guard statusTextField.text != "" else { return }
+        statusView.text = statusText ?? ""
+        
     }
     
-    private func setupLayout(){
-        [fullNameLabel, statusLabel, setStatusButton, statusTextField, avatarView, avatarImageView,  closeAvatarImageButton].forEach { addSubview($0) }
-        
+    @objc private func statusTextChanged(_ textField: UITextField) {
+        statusText = textField.text ?? ""
+    }
+    
+
+       private func setupGestures (){
+           let tapGesture = UITapGestureRecognizer (target: self, action: #selector(tapAction))
+           avatarImageView.addGestureRecognizer(tapGesture)
+       }
+    
+       @objc private func tapAction(){
+           
+           UIView.animate(withDuration: 0.5,
+                          delay: 0.0,
+                          usingSpringWithDamping: 1.0,
+                          initialSpringVelocity: 0.0,
+                          options: .curveEaseInOut) {
+
+               
+               self.avatarImageView.layer.position = CGPoint(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY)
+               self.avatarImageView.layer.bounds = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.width)
+               self.blackView.layer.opacity = 0.8
+               self.avatarImageView.layer.cornerRadius = 0
+               self.layoutIfNeeded()
+
+           } completion: { _ in
+               UIView.animate(withDuration: 0.3,
+                              delay: 0.0) {
+               self.cancelAnimationButton.layer.opacity = 1
+               }
+           }
+
+       }
+       
+       @objc private func pressCancelAnimationButton() {
+           UIView.animate(withDuration: 0.3,
+                          delay: 0.0,
+                          usingSpringWithDamping: 1.0,
+                          initialSpringVelocity: 0.0,
+                          options: .curveEaseInOut) {
+               self.cancelAnimationButton.layer.opacity = 0
+           } completion: { _ in
+               UIView.animate(withDuration: 0.5,
+                              delay: 0.0) {
+                   self.blackView.layer.opacity = 0.0
+                   self.avatarImageView.layer.position = self.additionalAvatar.layer.position
+                   self.avatarImageView.layer.bounds = CGRect(x: 0, y: 0, width: 100, height: 100)
+                   self.avatarImageView.layer.cornerRadius = self.avatarImageView.bounds.width / 2
+                   self.layoutIfNeeded()
+               }
+           }
+       }
+    
+    
+
+    private func setupLayuot (){
+        [fullNameLable, statusTextField, setStatusButton, statusView, additionalAvatar, blackView, avatarImageView, cancelAnimationButton ].forEach {self.addSubview($0)}
         NSLayoutConstraint.activate([
             
-            avatarView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-            avatarView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
-            avatarView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            avatarView.heightAnchor.constraint(equalToConstant: UIScreen.main.bounds.height),
+           
+            avatarImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 16),
+            avatarImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            avatarImageView.widthAnchor.constraint(equalToConstant: 100),
+            avatarImageView.heightAnchor.constraint(equalToConstant: 100),
             
-            avatarImageView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 16.0),
-            avatarImageView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 16.0),
-            avatarImageView.heightAnchor.constraint(equalToConstant: 130.0),
-            avatarImageView.widthAnchor.constraint(equalToConstant: 130.0),
+            additionalAvatar.topAnchor.constraint(equalTo: self.topAnchor, constant: 16),
+            additionalAvatar.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            additionalAvatar.heightAnchor.constraint(equalToConstant: 100),
+            additionalAvatar.widthAnchor.constraint(equalTo: additionalAvatar.heightAnchor, multiplier: 1),
             
-            closeAvatarImageButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -32),
-            closeAvatarImageButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 32),
+            cancelAnimationButton.topAnchor.constraint(equalTo: self.topAnchor, constant: 16),
+            cancelAnimationButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            cancelAnimationButton.widthAnchor.constraint(equalToConstant: 40),
+            cancelAnimationButton.heightAnchor.constraint(equalTo: cancelAnimationButton.widthAnchor, multiplier: 1),
             
-            fullNameLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16.0),
-            fullNameLabel.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -16.0),
-            fullNameLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 27.0),
+            fullNameLable.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 27),
+            fullNameLable.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16),
             
-            statusLabel.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16.0),
-            statusLabel.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -16.0),
-            statusLabel.bottomAnchor.constraint(equalTo: setStatusButton.topAnchor, constant: -64.0),
+            statusView.bottomAnchor.constraint(equalTo: statusTextField.topAnchor, constant: -6),
+            statusView.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16),
+            statusView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            statusView.heightAnchor.constraint(equalToConstant: 30),
             
-            setStatusButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 16.0),
-            setStatusButton.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 16.0),
-            setStatusButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -16.0),
-            setStatusButton.heightAnchor.constraint(equalToConstant: 50.0),
+            setStatusButton.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 16),
+            setStatusButton.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16 ),
+            setStatusButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            setStatusButton.heightAnchor.constraint(equalToConstant: 50),
             
-            statusTextField.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16.0),
-            statusTextField.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -16.0),
-            statusTextField.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 1.0),
+
+            statusTextField.bottomAnchor.constraint(equalTo: setStatusButton.topAnchor, constant: -16),
+            statusTextField.leadingAnchor.constraint(equalTo: avatarImageView.trailingAnchor, constant: 16),
+            statusTextField.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
             statusTextField.heightAnchor.constraint(equalToConstant: 40)
         ])
     }
-    
 }
-
 
