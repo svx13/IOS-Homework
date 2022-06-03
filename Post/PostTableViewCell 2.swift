@@ -110,7 +110,7 @@ class PostTableViewCell: UITableViewCell {
             
             self.modelPostFull.view += 1
             self.viewLabel.text = "Views: \(self.modelPostFull.view)"
-            self.tapPostImageDelegate?.postImagePressed(author: self.modelPostFull.author, description: self.modelPostFull.description ?? "", image: self.modelPostFull.image!)
+            self.tapPostImageDelegate?.postImagePressed(author: self.modelPostFull.author, description: self.modelPostFull.description ?? "", image: self.modelPostFull.image)
             
         }
     }
